@@ -1,8 +1,10 @@
 {
   "expo": {
-    "name": "evacuation",
-    "slug": "evacuation",
-    "version": "1.0.0",
+    "name": "uep-evacuation",
+    "slug": "uep-evacuation",
+    "privacy":"public",
+    
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,6 +22,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package":"uep.evacuationManager",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -27,6 +30,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Admin app for uep evacuation, this manage all evacuation center(add,remove evacuation)"
   }
 }

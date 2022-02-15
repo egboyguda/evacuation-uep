@@ -1,20 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import React, { useContext, useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { setNavigator } from './src/navigationRes';
+import LoginStackScreen from './src/navigation/loginStack';
+import { Context as AuthContext } from './src/context/authContext';
+import { Provider as AuthProvider } from './src/context/authContext';
+import { Provider as ApiProvider } from './src/context/apiContext';
+import { Provider as LocationProvider } from './src/context/locationContext';
+import MainStack from './src/navigation/mainStack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Stack = createNativeStackNavigator();
 
-export default function App() {
+App = () => {
+  const { state, restoreToken } = useContext(AuthContext);
+  useEffect(async () => {
+    var token = await AsyncStorage.getItem('token');
+    //console.log(token);
+    token ? restoreToken(token) : null;
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer
+      ref={(navigator) => {
+        setNavigator(navigator);
+      }}
+    >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {state.isSignIn ? (
+          <Stack.Screen name='Main' component={MainStack} />
+        ) : (
+          <Stack.Screen name='Login' component={LoginStackScreen} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => {
+  return (
+    <AuthProvider>
+      <LocationProvider>
+        <ApiProvider>
+          <App />
+        </ApiProvider>
+      </LocationProvider>
+    </AuthProvider>
+  );
+};
